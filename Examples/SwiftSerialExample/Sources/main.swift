@@ -12,7 +12,7 @@ guard arguments.count >= 2 else {
 }
 
 let portName = arguments[1]
-let serialPort: SerialPort = SerialPort(name: portName)
+let serialPort: SerialPort = SerialPort(path: portName)
 
 do {
     try serialPort.openPort()
