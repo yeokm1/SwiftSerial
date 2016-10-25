@@ -187,9 +187,9 @@ public enum DataBitsSize {
 }
 
 public enum ParityType {
-	case none
-	case even
-	case odd
+    case none
+    case even
+    case odd
 
 	var parityValue: tcflag_t {
         switch self {
@@ -233,15 +233,23 @@ public class SerialPort {
             throw PortError.mustReceiveOrTransmit
         }
 
+        var readWriteParam : Int32
+
         if receive && transmit {
-            fileDescriptor = open(path, O_RDWR | O_NOCTTY)
+            readWriteParam = O_RDWR
         } else if receive {
-            fileDescriptor = open(path, O_RDONLY | O_NOCTTY)
+            readWriteParam = O_RDONLY
         } else if transmit {
-            fileDescriptor = open(path, O_WRONLY | O_NOCTTY)
+            readWriteParam = O_WRONLY
         } else {
             fatalError()
         }
+
+    #if os(Linux)
+        fileDescriptor = open(path, readWriteParam | O_NOCTTY)
+    #elseif os(OSX)
+        fileDescriptor = open(path, readWriteParam | O_NOCTTY | O_EXLOCK | O_NONBLOCK)
+    #endif
 
         // Throw error if open() failed
         if fileDescriptor == PortError.failedToOpen.rawValue {
@@ -259,9 +267,12 @@ public class SerialPort {
                             useHardwareFlowControl: Bool = false,
                             useSoftwareFlowControl: Bool = false,
                             processOutput: Bool = false) {
+        print("top")
+        
         guard let fileDescriptor = fileDescriptor else {
             return
         }
+
 
         // Set up the control structure
         var settings = termios()
