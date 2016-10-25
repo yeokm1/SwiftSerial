@@ -1,5 +1,5 @@
 import Foundation
-import SwiftLinuxSerial
+import SwiftSerial
 
 print("You should do a loopback i.e short the TX and RX pins of the target serial port before testing.")
 
