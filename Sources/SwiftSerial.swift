@@ -420,14 +420,18 @@ extension SerialPort {
             buffer.deallocate(capacity: 1)
         }
 
-        // Read byte by byte
-        while try readBytes(into: buffer, size: 1) > 0 {
-            let character = CChar(buffer[0])
-            if character != terminator {
-                data.append(buffer, count: 1)
-            } else {
-                break
-            }
+        while true {
+        	let bytesRead = try readBytes(into: buffer, size: 1)
+
+        	if bytesRead > 0 {
+        		let character = CChar(buffer[0])
+                
+                if character == terminator {
+                    break
+                } else {
+                    data.append(buffer, count: 1)
+                }
+        	}
         }
 
         if let string = String(data: data, encoding: String.Encoding.utf8) {
