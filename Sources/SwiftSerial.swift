@@ -267,7 +267,6 @@ public class SerialPort {
                             useHardwareFlowControl: Bool = false,
                             useSoftwareFlowControl: Bool = false,
                             processOutput: Bool = false) {
-        print("top")
         
         guard let fileDescriptor = fileDescriptor else {
             return
