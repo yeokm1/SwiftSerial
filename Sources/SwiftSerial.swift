@@ -380,7 +380,16 @@ extension SerialPort {
         }
 
         let bytesRead = try readBytes(into: buffer, size: length)
-        let data = Data(bytes: buffer, count: bytesRead)
+
+        var data : Data
+
+        if bytesRead > 0 {
+            data = Data(bytes: buffer, count: bytesRead)
+        } else {
+            //This is to avoid the case where bytesRead can be negative causing problems allocating the Data buffer
+       	    data = Data(bytes: buffer, count: 0)
+        }
+
         return data
     }
 
@@ -390,6 +399,7 @@ extension SerialPort {
 
         while remainingBytesToRead > 0 {
             let data = try readData(ofLength: remainingBytesToRead)
+
             if let string = String(data: data, encoding: String.Encoding.utf8) {
                 result += string
                 remainingBytesToRead -= data.count
