@@ -335,7 +335,7 @@ public class SerialPort {
             settings.c_oflag &= ~tcflag_t(OPOST)
         }
 
-        // Special characters
+        //Special characters
         //We do this as c_cc is a C-fixed array which is imported as a tuple in Swift.
         //To avoid hardcoding the VMIN or VTIME value to access the tuple value, we use the typealias instead
     #if os(Linux)
