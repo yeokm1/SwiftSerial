@@ -183,6 +183,24 @@ public enum DataBitsSize {
             return tcflag_t(CS8)
         }
     }
+
+}
+
+public enum ParityType {
+	case none
+	case even
+	case odd
+
+	var parityValue: tcflag_t {
+        switch self {
+        case .none:
+            return 0
+        case .even:
+            return tcflag_t(PARENB)
+        case .odd:
+            return tcflag_t(PARENB | PARODD)
+        }
+    }
 }
 
 public enum PortError: Int32, Error {
@@ -235,7 +253,7 @@ public class SerialPort {
                             transmitRate: BaudRate,
                             minimumBytesToRead: Int,
                             timeout: Int = 0, /* 0 means wait indefinitely */
-                            enableParity: Bool = false,
+                            parityType: ParityType = .none,
                             sendTwoStopBits: Bool = false, /* 1 stop bit is the default */
                             dataBitsSize: DataBitsSize = .bits8,
                             useHardwareFlowControl: Bool = false,
@@ -255,12 +273,8 @@ public class SerialPort {
         cfsetispeed(&settings, receiveRate.speedValue)
         cfsetospeed(&settings, transmitRate.speedValue)
 
-        // Set parity enable flag
-        if enableParity {
-            settings.c_cflag |= ~tcflag_t(PARENB)
-        } else {
-            settings.c_cflag &= ~tcflag_t(PARENB)
-        }
+        // Enable parity (even/odd) if needed
+        settings.c_cflag |= parityType.parityValue
 
         // Set stop bit flag
         if sendTwoStopBits {
