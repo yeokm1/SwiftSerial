@@ -113,7 +113,7 @@ Opening the port without any parameters will set the port to receive and transmi
 ```swift
 serialPort.setSettings(receiveRate: .baud9600, transmitRate: .baud9600, minimumBytesToRead: 1)
 ```
-The port settings call can be as simple as the above. For the baud rate, just supply both transmit and receive even if you are only intend to use one function. For example, transmitRate will be ignored if you specified `andTransmit : false` when opening the port. 
+The port settings call can be as simple as the above. For the baud rate, just supply both transmit and receive even if you are only intending to use one transfer direction. For example, transmitRate will be ignored if you specified `andTransmit : false` when opening the port. 
 
 `minimumBytesToRead` determines how many characters Linux must wait to receive before it will return from a [read()](https://linux.die.net/man/2/read) function. If in doubt, just put 1.
 
