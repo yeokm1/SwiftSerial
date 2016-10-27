@@ -63,8 +63,8 @@ export PATH=$HOME/swift-3.0/usr/bin:$PATH
 To get started quickly, you can take a look at my example project [here](Examples/SwiftSerialExample). In order to run the example properly, you need to connect one of your (USB/UART) serial ports in a loopback manner. Basically, you short the TX and RX pins of the serial port.
 
 ```bash
-git clone https://github.com/yeokm1/SwiftLinuxSerial.git
-cd SwiftLinuxSerial/Examples/SwiftSerialExample/
+git clone https://github.com/yeokm1/SwiftSerial.git
+cd SwiftSerial/Examples/SwiftSerialExample/
 swift build
 #You need root to access the serial port. Replace /dev/ttyUSB0 with the name of your serial port under test
 sudo ./.build/debug/SwiftSerialExample /dev/ttyUSB0
@@ -98,7 +98,7 @@ Then run `swift build` to download the dependencies and compile your project. Yo
 ```swift
 let serialPort: SerialPort = SerialPort(path: portName)
 ```
-Supply the portname that you wish to open like `/dev/ttyUSB0` or `/dev/usbserial`.
+Supply the portname that you wish to open like `/dev/ttyUSB0` or `/dev/tty.usbserial`.
 
 ### Opening the Serial Port
 
@@ -115,7 +115,7 @@ serialPort.setSettings(receiveRate: .baud9600, transmitRate: .baud9600, minimumB
 ```
 The port settings call can be as simple as the above. For the baud rate, just supply both transmit and receive even if you are only intending to use one transfer direction. For example, transmitRate will be ignored if you specified `andTransmit : false` when opening the port. 
 
-`minimumBytesToRead` determines how many characters Linux must wait to receive before it will return from a [read()](https://linux.die.net/man/2/read) function. If in doubt, just put 1.
+`minimumBytesToRead` determines how many characters the system must wait to receive before it will return from a [read()](https://linux.die.net/man/2/read) function. If in doubt, just put 1.
 
 This function has been defined with default settings as shown in the function definition.
 
