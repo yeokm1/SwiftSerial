@@ -25,6 +25,7 @@ do {
     print("Serial port \(portName) opened successfully.")
     defer {
         serialPort.closePort()
+        print("Port Closed")
     }
 
     serialPort.setSettings(receiveRate: .baud9600,
@@ -73,9 +74,9 @@ do {
             break
         }
     }
+    
+    print("End of example");
 
-
-    print("We successfully received back \(numberOfMultiNewLineTest) lines")
 
 } catch PortError.failedToOpen {
     print("Serial port \(portName) failed to open. You might need root permissions.")
