@@ -66,8 +66,12 @@ To get started quickly, you can take a look at my example project [here](Example
 git clone https://github.com/yeokm1/SwiftSerial.git
 cd SwiftSerial/Examples/SwiftSerialExample/
 swift build
-#You need root to access the serial port. Replace /dev/ttyUSB0 with the name of your serial port under test
+
+#For Linux: You need root to access the serial port. Replace /dev/ttyUSB0 with the name of your serial port under test
 sudo ./.build/debug/SwiftSerialExample /dev/ttyUSB0
+
+#For Mac: Root is not required
+./.build/debug/SwiftSerialExample /dev/tty.usbserial
 
 #If all goes well you should see a series of messages informing you that data transmitted has been received properly.
 ```
