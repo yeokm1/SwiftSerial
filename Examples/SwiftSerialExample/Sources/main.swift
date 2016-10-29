@@ -11,7 +11,7 @@ let test3Strings: String = testString + "\n" + testString + "\n" + testString + 
 
 let arguments = CommandLine.arguments
 guard arguments.count >= 2 else {
-    print("Need serial port name, e.g. /dev/ttyUSB0 as the first argument.")
+    print("Need serial port name, e.g. /dev/ttyUSB0 or /dev/cu.usbserial as the first argument.")
     exit(1)
 }
 
