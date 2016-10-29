@@ -166,6 +166,11 @@ func readUntilChar(_ terminator: CChar) throws -> String
 ```
 Keep reading until the specified CChar is encountered. Return the string read so far without that value.
 
+```swift
+func readChar() throws -> UnicodeScalar
+```
+Read only one character. This works best if `minimumBytesToRead` has been set to `1` when opening the port. This function internally calls `readBytes()`.
+
 ### Writing data to the port
 
 There are several functions you can use to write data. All functions here are blocking till all the data has been written. All functions can throw `PortError.mustBeOpen`.
@@ -184,6 +189,11 @@ Binary data in, then transmit! Will return how many bytes actually written. Inte
 func writeBytes(from buffer: UnsafeMutablePointer<UInt8>, size: Int) throws -> Int
 ```
 Function for those that want to mess with unsafe pointers. You have to specify how many bytes have to be written. Will return how many bytes actually written.
+
+```swift
+func writeChar(_ character: UnicodeScalar) throws -> Int{
+```
+Writes only one character. Will return `1` if successful. This function internally calls `writeString()`. Pull requests for a better way of doing this is appreciated.
 
 ### Closing the port
 
