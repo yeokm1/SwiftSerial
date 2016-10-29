@@ -53,6 +53,17 @@ func printToScreenFrom(myself: Bool, characterToPrint: UnicodeScalar){
     print(characterToPrint, terminator:"")
 }
 
+func backgroundRead() {
+    while true{
+        do{
+            let readCharacter = try serialPort.readChar()
+            printToScreenFrom(myself: false, characterToPrint: readCharacter)
+        } catch {
+            print("Error: \(error)")
+        }
+    }  
+}
+
 
 
 do {
@@ -77,23 +88,23 @@ do {
 
 
     //Run the serial port reading function in another thread
+#if os(Linux)
     var readingThread = pthread_t()
 
     let pthreadFunc: @convention(c) (UnsafeMutableRawPointer?) -> UnsafeMutableRawPointer? = {
         observer in
-        while true{
-            do{
-                var readCharacter = try serialPort.readChar()
-                printToScreenFrom(myself: false, characterToPrint: readCharacter)
-            } catch {
-                print("Error: \(error)")
-            }
-        }  
 
+        backgroundRead()
     }
 
     pthread_create(&readingThread, nil, pthreadFunc, nil)
 
+#elseif os(OSX)
+    DispatchQueue.global(qos: .userInitiated).async { 
+        backgroundRead()
+    }
+
+#endif
 
 
     print("\nReady to send and receive messages in realtime!")
