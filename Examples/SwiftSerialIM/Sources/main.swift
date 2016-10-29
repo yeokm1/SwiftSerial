@@ -44,10 +44,10 @@ func printToScreenFrom(myself: Bool, characterToPrint: UnicodeScalar){
 
     if(myturn && !myself){
         myturn = false
-        print("\nOther: ", terminator:"")
+        print("\n\nOther: ", terminator:"")
     } else if (!myturn && myself){
         myturn = true
-        print("\nMe: ", terminator:"")
+        print("\n\nMe: ", terminator:"")
     }
 
     print(characterToPrint, terminator:"")
