@@ -95,6 +95,7 @@ do {
         observer in
 
         backgroundRead()
+        return nil
     }
 
     pthread_create(&readingThread, nil, pthreadFunc, nil)
