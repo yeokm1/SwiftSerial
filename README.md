@@ -59,8 +59,11 @@ nano ~/.profile
 export PATH=$HOME/swift-3.0/usr/bin:$PATH
 ```
 ## Jumping straight into sample code
+To get started quickly, you can take a look at my example projects [here](Examples/). 
 
-To get started quickly, you can take a look at my example project [here](Examples/SwiftSerialExample). In order to run the example properly, you need to connect one of your (USB/UART) serial ports in a loopback manner. Basically, you short the TX and RX pins of the serial port.
+### Example 1: Loopback Test
+
+In order to run this example properly, you need to connect one of your (USB/UART) serial ports in a loopback manner. Basically, you short the TX and RX pins of the serial port.
 
 ```bash
 git clone https://github.com/yeokm1/SwiftSerial.git
@@ -71,10 +74,27 @@ swift build
 sudo ./.build/debug/SwiftSerialExample /dev/ttyUSB0
 
 #For Mac: Root is not required
-./.build/debug/SwiftSerialExample /dev/tty.usbserial
+./.build/debug/SwiftSerialExample /dev/cu.usbserial
 
 #If all goes well you should see a series of messages informing you that data transmitted has been received properly.
 ```
+
+### Example 2: An chat app between 2 machines
+
+In order to run this example properly, you need 2 machines connected by a [null-modem cable](https://en.wikipedia.org/wiki/Null_modem) or 2 USB-Serial adapters with the TX-RX pins connected to each other. Run a copy of my program on both machines.
+
+```bash
+git clone https://github.com/yeokm1/SwiftSerial.git
+cd SwiftSerial/Examples/SwiftSerialIM/
+swift build
+
+#For Linux: You need root to access the serial port. Replace /dev/ttyUSB0 with the name of your serial port under test
+sudo ./.build/debug/SwiftSerialIM /dev/ttyUSB0
+
+#For Mac: Root is not required
+./.build/debug/SwiftSerialIM /dev/cu.usbserial
+```
+People at both machines can now "chat" with each other.
 
 ## Integrating with your project
 
@@ -102,7 +122,9 @@ Then run `swift build` to download the dependencies and compile your project. Yo
 ```swift
 let serialPort: SerialPort = SerialPort(path: portName)
 ```
-Supply the portname that you wish to open like `/dev/ttyUSB0` or `/dev/cu.usbserial`. For Macs, this library currently only works with the `/dev/cu.*` ports instead of the `/dev/tty.*`. I have enabled blocking on the serial port to prevent high CPU usage which will prevent the `/dev/tty.*` from working. If there is an problem, open an issue describing your situation and let me look into it.
+Supply the portname that you wish to open like `/dev/ttyUSB0` or `/dev/cu.usbserial`. 
+
+For Macs, this library currently only works with the `/dev/cu.*` ports instead of the `/dev/tty.*`. I have enabled blocking on the serial port to prevent high CPU usage which will prevent the `/dev/tty.*` from working. Read more about the differences between the two [here](http://stackoverflow.com/questions/8632586/macos-whats-the-difference-between-dev-tty-and-dev-cu). If there is an problem, open an issue describing your situation and let me look into it.
 
 ### Opening the Serial Port
 
