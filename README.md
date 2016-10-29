@@ -63,7 +63,7 @@ To get started quickly, you can take a look at my example projects [here](Exampl
 
 ### Example 1: Loopback Test
 
-In order to run this example properly, you need to connect one of your (USB/UART) serial ports in a loopback manner. Basically, you short the TX and RX pins of the serial port.
+In order to run this example properly, you need to connect one of your (USB/UART) serial ports in a loopback manner. Basically, you short the TX and RX pins of the serial port. This library currently only support the `/dev/cu.*` variant on Mac. Read the beginning of the API usage section for more details.
 
 ```bash
 git clone https://github.com/yeokm1/SwiftSerial.git
@@ -79,7 +79,7 @@ sudo ./.build/debug/SwiftSerialExample /dev/ttyUSB0
 #If all goes well you should see a series of messages informing you that data transmitted has been received properly.
 ```
 
-### Example 2: An chat app between 2 machines
+### Example 2: A chat app between 2 machines
 
 In order to run this example properly, you need 2 machines connected by a [null-modem cable](https://en.wikipedia.org/wiki/Null_modem) or 2 USB-Serial adapters with the TX-RX pins connected to each other. Run a copy of my program on both machines.
 
@@ -124,7 +124,7 @@ let serialPort: SerialPort = SerialPort(path: portName)
 ```
 Supply the portname that you wish to open like `/dev/ttyUSB0` or `/dev/cu.usbserial`. 
 
-For Macs, this library currently only works with the `/dev/cu.*` ports instead of the `/dev/tty.*`. I have enabled blocking on the serial port to prevent high CPU usage which will prevent the `/dev/tty.*` from working. Read more about the differences between the two [here](http://stackoverflow.com/questions/8632586/macos-whats-the-difference-between-dev-tty-and-dev-cu). If there is an problem, open an issue describing your situation and let me look into it.
+For Macs, this library currently only works with the `/dev/cu.*` ports instead of the `/dev/tty.*`. I have enabled blocking on the serial port to prevent high CPU usage which will prevent the `/dev/tty.*` from working. Read more about the differences between the two [here](http://stackoverflow.com/questions/8632586/macos-whats-the-difference-between-dev-tty-and-dev-cu). If there is a problem, open an issue describing your situation and let me look into it.
 
 ### Opening the Serial Port
 
