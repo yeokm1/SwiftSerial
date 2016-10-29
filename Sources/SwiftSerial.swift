@@ -191,7 +191,7 @@ public enum ParityType {
     case even
     case odd
 
-	var parityValue: tcflag_t {
+    var parityValue: tcflag_t {
         switch self {
         case .none:
             return 0
@@ -389,7 +389,7 @@ extension SerialPort {
             data = Data(bytes: buffer, count: bytesRead)
         } else {
             //This is to avoid the case where bytesRead can be negative causing problems allocating the Data buffer
-       	    data = Data(bytes: buffer, count: 0)
+            data = Data(bytes: buffer, count: 0)
         }
 
         return data
@@ -421,17 +421,17 @@ extension SerialPort {
         }
 
         while true {
-        	let bytesRead = try readBytes(into: buffer, size: 1)
+            let bytesRead = try readBytes(into: buffer, size: 1)
 
-        	if bytesRead > 0 {
-        		let character = CChar(buffer[0])
+            if bytesRead > 0 {
+                let character = CChar(buffer[0])
                 
                 if character == terminator {
                     break
                 } else {
                     data.append(buffer, count: 1)
                 }
-        	}
+            }
         }
 
         if let string = String(data: data, encoding: String.Encoding.utf8) {
@@ -445,6 +445,25 @@ extension SerialPort {
         let newlineChar = CChar(10) // Newline/Line feed character `\n` is 10
         return try readUntilChar(newlineChar)
     }
+
+    public func readChar() throws -> UnicodeScalar {
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 1)
+        
+        defer {
+            buffer.deallocate(capacity: 1)
+        }
+
+        while true {
+            let bytesRead = try readBytes(into: buffer, size: 1)
+
+            if bytesRead > 0 {
+                let character = UnicodeScalar(buffer[0])
+                return character     
+            }
+        }         
+
+    }
+
 }
 
 // MARK: Transmitting
@@ -479,5 +498,11 @@ extension SerialPort {
         }
 
         return try writeData(data)
+    }
+
+    public func writeChar(_ character: UnicodeScalar) throws -> Int{
+        let stringEquiv = String(character)
+        let bytesWritten = try writeString(stringEquiv)
+        return bytesWritten
     }
 }
