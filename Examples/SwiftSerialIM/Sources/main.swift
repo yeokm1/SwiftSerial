@@ -15,6 +15,20 @@ let serialPort: SerialPort = SerialPort(path: portName)
 
 var myturn = true
 
+// Prepares the stdin so we can getchar() without echoing 
+func prepareStdin() {
+
+    // Set up the control structure
+    var settings = termios()
+
+    // Get options structure for stdin
+    tcgetattr(STDIN_FILENO, &settings)
+
+    //Turn off ICANON and ECHO
+    settings.c_lflag &= ~tcflag_t(ICANON | ECHO)
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &settings)
+}
 
 func getKeyPress () -> UnicodeScalar {
     let valueRead: Int = Int(getchar())
@@ -55,20 +69,7 @@ do {
                            transmitRate: .baud9600,
                            minimumBytesToRead: 1)
 
-    
-    /* These prepares the stdin so we can getchar() without echoing */
-    // Set up the control structure
-    var settings = termios()
-
-    // Get options structure for stdin
-    tcgetattr(STDIN_FILENO, &settings)
-
-    //Turn off ICANON and ECHO
-    settings.c_lflag &= ~tcflag_t(ICANON | ECHO)
-
-    tcsetattr(STDIN_FILENO, TCSANOW, &settings)
-
-
+    prepareStdin()
 
 
     //Turn off output buffering if not multiple threads will have problems printing
