@@ -102,7 +102,7 @@ Then run `swift build` to download the dependencies and compile your project. Yo
 ```swift
 let serialPort: SerialPort = SerialPort(path: portName)
 ```
-Supply the portname that you wish to open like `/dev/ttyUSB0` or `/dev/tty.usbserial`.
+Supply the portname that you wish to open like `/dev/ttyUSB0` or `/dev/cu.usbserial`. For Macs, this library currently only works with the `/dev/cu.*` ports instead of the `/dev/tty.*`. I have enabled blocking on the serial port to prevent high CPU usage which will prevent the `/dev/tty.*` from working. If there is an problem, open an issue describing your situation and let me look into it.
 
 ### Opening the Serial Port
 
