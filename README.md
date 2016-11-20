@@ -9,6 +9,12 @@ This library is an improvement over my previous now deprecated library [SwiftLin
 <a href="https://developer.apple.com/swift"><img src="https://img.shields.io/badge/swift3-compatible-orange.svg?style=flat" alt="Swift 3 compatible" /></a>
 <a href="https://raw.githubusercontent.com/uraimo/SwiftyGPIO/master/LICENSE"><img src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat" alt="License: MIT" /></a>
 
+##Talk on this library
+
+I gave a talk on this library and one of its examples SwiftSerialIM. Click the picture link to see my slides on Slideshare.
+
+[![My slides on slideshare](first-slide.png)](http://www.slideshare.net/yeokm1/a-science-project-swift-serial-chat)
+
 ## Mac OS Preparation
 
 You should have Xcode 8 installed with the command line tools.
