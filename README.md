@@ -11,9 +11,11 @@ This library is an improvement over my previous now deprecated library [SwiftLin
 
 ##Talk on this library
 
-I gave a talk on this library and one of its examples SwiftSerialIM. Click the picture link to see my slides on Slideshare.
+I gave a talk on this library and one of its examples SwiftSerialIM. Click on the links below to see the slides and video.
 
 [![My slides on slideshare](first-slide.png)](http://www.slideshare.net/yeokm1/a-science-project-swift-serial-chat)
+
+[![](http://img.youtube.com/vi/6PWP1eZo53s/0.jpg)](https://www.youtube.com/watch?v=6PWP1eZo53s) 
 
 ## Mac OS Preparation
 
