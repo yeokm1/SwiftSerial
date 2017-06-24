@@ -197,9 +197,14 @@ func readUntilChar(_ terminator: CChar) throws -> String
 Keep reading until the specified CChar is encountered. Return the string read so far without that value.
 
 ```swift
+func readByte() throws -> UInt8
+```
+Read only one byte. This works best if `minimumBytesToRead` has been set to `1` when opening the port. This function internally calls `readBytes()`.
+
+```swift
 func readChar() throws -> UnicodeScalar
 ```
-Read only one character. This works best if `minimumBytesToRead` has been set to `1` when opening the port. This function internally calls `readBytes()`.
+Read only one character. This works best if `minimumBytesToRead` has been set to `1` when opening the port. This function internally calls `readByte()`.
 
 ### Writing data to the port
 
