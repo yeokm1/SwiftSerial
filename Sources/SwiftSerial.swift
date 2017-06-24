@@ -460,7 +460,7 @@ extension SerialPort {
                 let character = UnicodeScalar(buffer[0])
                 return character     
             }
-        }
+        }         
     }
     
     public func readByte() throws -> UInt8 {
