@@ -490,7 +490,7 @@ extension SerialPort {
             let byteRead = UInt8(try readBytes(into: buffer, size: 1))
             
             if byteRead > 0 {
-                data.append(byteRead)
+                data.append(buffer[0])
                 if data.count >= stopBytes.count {
                     for index in (0..<stopBytes.count).reversed() {
                         var isStopFound = 0
