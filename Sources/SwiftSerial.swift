@@ -478,6 +478,37 @@ extension SerialPort {
             }
         }
     }
+    
+    public func readUntilBytes(stopBytes: [UInt8], maxBytes: Int) throws -> [UInt8] {
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 1)
+        var data = [UInt8]()
+        defer {
+            buffer.deallocate(capacity: 1)
+        }
+        
+        while true {
+            let byteRead = UInt8(try readBytes(into: buffer, size: 1))
+            
+            if byteRead > 0 {
+                data.append(byteRead)
+                if data.count >= stopBytes.count {
+                    for index in (0..<stopBytes.count).reversed() {
+                        var isStopFound = 0
+                        if stopBytes[index] == data[data.count - index - 1]{
+                            isStopFound = isStopFound + 1
+                        }
+                        if isStopFound == stopBytes.count {
+                            return data
+                        }
+                    }
+                }
+                
+                if data.count >= maxBytes {
+                    return data
+                }
+            }
+        }
+    }
 
 }
 
