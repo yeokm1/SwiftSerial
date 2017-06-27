@@ -494,7 +494,7 @@ extension SerialPort {
                 if data.count >= stopBytes.count {
                     for index in (0..<stopBytes.count).reversed() {
                         var isStopFound = 0
-                        if stopBytes[index] == data[data.count - index] {
+                        if stopBytes[index] == data[data.count - index - 1] {
                             isStopFound = isStopFound + 1
                         }
                         if isStopFound == stopBytes.count {
