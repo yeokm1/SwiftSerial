@@ -9,13 +9,13 @@ This library is an improvement over my previous now deprecated library [SwiftLin
 <a href="https://developer.apple.com/swift"><img src="https://img.shields.io/badge/swift3-compatible-orange.svg?style=flat" alt="Swift 3 compatible" /></a>
 <a href="https://raw.githubusercontent.com/uraimo/SwiftyGPIO/master/LICENSE"><img src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat" alt="License: MIT" /></a>
 
-##Talk on this library
+## Talk on this library
 
 I gave a talk on this library and one of its examples SwiftSerialIM. Click on the links below to see the slides and video.
 
 [![My slides on slideshare](first-slide.png)](http://www.slideshare.net/yeokm1/a-science-project-swift-serial-chat)
 
-[![](http://img.youtube.com/vi/6PWP1eZo53s/0.jpg)](https://www.youtube.com/watch?v=6PWP1eZo53s) 
+[![](http://img.youtube.com/vi/6PWP1eZo53s/0.jpg)](https://www.youtube.com/watch?v=6PWP1eZo53s)
 
 ## Mac OS Preparation
 
@@ -23,7 +23,7 @@ You should have Xcode 8 installed with the command line tools.
 
 ## Linux System Preparation
 
-Before using this library, I assume you already have Ubuntu installed and fully updated on your system or single-board computer. To get Ubuntu installed on the Raspberry Pi, use this [link](https://wiki.ubuntu.com/ARM/RaspberryPi). 
+Before using this library, I assume you already have Ubuntu installed and fully updated on your system or single-board computer. To get Ubuntu installed on the Raspberry Pi, use this [link](https://wiki.ubuntu.com/ARM/RaspberryPi).
 
 ### Install Swift 3 on Ubuntu on x86-based machines
 
@@ -58,16 +58,16 @@ sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.6
 
 cd ~
 #Replace the link below with the latest version
-wget http://swift-arm.ddns.net/job/Swift-3.0-Pi3-ARM-Incremental/lastSuccessfulBuild/artifact/swift-3.0-2016-10-13-RPi23-ubuntu16.04.tar.gz	
+wget http://swift-arm.ddns.net/job/Swift-3.0-Pi3-ARM-Incremental/lastSuccessfulBuild/artifact/swift-3.0-2016-10-13-RPi23-ubuntu16.04.tar.gz
 mkdir swift-3.0
-cd swift-3.0 && tar -xzf ../swift-3.0-2016-10-13-RPi23-ubuntu16.04.tar.gz	
+cd swift-3.0 && tar -xzf ../swift-3.0-2016-10-13-RPi23-ubuntu16.04.tar.gz
 
 #This command can be added to your bash profile so Swift will be in your PATH after a reboot
 nano ~/.profile
 export PATH=$HOME/swift-3.0/usr/bin:$PATH
 ```
 ## Jumping straight into sample code
-To get started quickly, you can take a look at my example projects [here](Examples/). 
+To get started quickly, you can take a look at my example projects [here](Examples/).
 
 ### Example 1: Loopback Test
 
@@ -130,7 +130,7 @@ Then run `swift build` to download the dependencies and compile your project. Yo
 ```swift
 let serialPort: SerialPort = SerialPort(path: portName)
 ```
-Supply the portname that you wish to open like `/dev/ttyUSB0` or `/dev/cu.usbserial`. 
+Supply the portname that you wish to open like `/dev/ttyUSB0` or `/dev/cu.usbserial`.
 
 For Macs, this library currently only works with the `/dev/cu.*` ports instead of the `/dev/tty.*`. I have enabled blocking on the serial port to prevent high CPU usage which will prevent the `/dev/tty.*` from working. Read more about the differences between the two [here](http://stackoverflow.com/questions/8632586/macos-whats-the-difference-between-dev-tty-and-dev-cu). If there is a problem, open an issue describing your situation and let me look into it.
 
@@ -147,7 +147,7 @@ Opening the port without any parameters will set the port to receive and transmi
 ```swift
 serialPort.setSettings(receiveRate: .baud9600, transmitRate: .baud9600, minimumBytesToRead: 1)
 ```
-The port settings call can be as simple as the above. For the baud rate, just supply both transmit and receive even if you are only intending to use one transfer direction. For example, transmitRate will be ignored if you specified `andTransmit : false` when opening the port. 
+The port settings call can be as simple as the above. For the baud rate, just supply both transmit and receive even if you are only intending to use one transfer direction. For example, transmitRate will be ignored if you specified `andTransmit : false` when opening the port.
 
 `minimumBytesToRead` determines how many characters the system must wait to receive before it will return from a [read()](https://linux.die.net/man/2/read) function. If in doubt, just put 1.
 
@@ -197,9 +197,14 @@ func readUntilChar(_ terminator: CChar) throws -> String
 Keep reading until the specified CChar is encountered. Return the string read so far without that value.
 
 ```swift
+func readByte() throws -> UInt8
+```
+Read only one byte. This works best if `minimumBytesToRead` has been set to `1` when opening the port. This function internally calls `readBytes()`.
+
+```swift
 func readChar() throws -> UnicodeScalar
 ```
-Read only one character. This works best if `minimumBytesToRead` has been set to `1` when opening the port. This function internally calls `readBytes()`.
+Read only one character. This works best if `minimumBytesToRead` has been set to `1` when opening the port. This function internally calls `readByte()`.
 
 ```swift
 func readUntilBytes(stopBytes: [UInt8], maxBytes: Int) throws -> [UInt8]

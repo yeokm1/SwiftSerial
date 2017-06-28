@@ -446,23 +446,6 @@ extension SerialPort {
         return try readUntilChar(newlineChar)
     }
 
-    public func readChar() throws -> UnicodeScalar {
-        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 1)
-        
-        defer {
-            buffer.deallocate(capacity: 1)
-        }
-
-        while true {
-            let bytesRead = try readBytes(into: buffer, size: 1)
-
-            if bytesRead > 0 {
-                let character = UnicodeScalar(buffer[0])
-                return character     
-            }
-        }         
-    }
-    
     public func readByte() throws -> UInt8 {
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 1)
         
@@ -510,6 +493,12 @@ extension SerialPort {
         }
     }
 
+    public func readChar() throws -> UnicodeScalar {
+        let byteRead = readByte()
+        let character = UnicodeScalar(buffer[0])
+        return character     
+    }
+   
 }
 
 // MARK: Transmitting
