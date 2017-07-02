@@ -470,9 +470,6 @@ extension SerialPort {
     
     public func readUntilBytes(stopBytes: [UInt8], maxBytes: Int) throws -> [UInt8] {
         var data = [UInt8]()
-        defer {
-            data = nil
-        }
         var isStopFound = 0
         while true {
             let byteRead = try readByte()
