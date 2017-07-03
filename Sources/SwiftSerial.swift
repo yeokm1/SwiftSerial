@@ -350,8 +350,8 @@ public class SerialPort {
         specialCharacters.VTIME = cc_t(timeout)
         
         //if not set we reciving 0x0A where must be 0x0D value
-        settings.c_iflag &= ~UInt(INLCR)
-        settings.c_iflag &= ~UInt(ICRNL)
+        settings.c_iflag &= ~tcflag_t(INLCR)
+        settings.c_iflag &= ~tcflag_t(ICRNL)
         
         settings.c_cc = specialCharacters
         
