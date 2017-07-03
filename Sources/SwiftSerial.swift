@@ -497,7 +497,7 @@ extension SerialPort {
             if data.count >= stopBytes.count {
                 if byteRead == stopBytes[stopBytes.count - 1] {
                     for index in (0..<stopBytes.count).reversed() {
-                        if stopBytes[index] == data[data.count - index - 1] {
+                        if stopBytes[stopBytes.count - index - 1 ] == data[data.count - index - 1] {
                             isStopFound = isStopFound + 1
                         }
                         if isStopFound == stopBytes.count {
