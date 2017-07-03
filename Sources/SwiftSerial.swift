@@ -490,25 +490,28 @@ extension SerialPort {
         var data = [UInt8]()
         var isStopFound = 0
         while true {
+            isStopFound = 0
             let byteRead = try readByte()
             data.append(byteRead)
+            
             if data.count >= stopBytes.count {
-                for index in (0..<stopBytes.count).reversed() {
-                    if stopBytes[index] == data[data.count - index - 1] {
-                        isStopFound = isStopFound + 1
-                    }
-                    if isStopFound == stopBytes.count {
-                        
-                        return data
+                if byteRead == stopBytes[stopBytes.count - 1] {
+                    for index in (0..<stopBytes.count).reversed() {
+                        if stopBytes[index] == data[data.count - index - 1] {
+                            isStopFound = isStopFound + 1
+                        }
+                        if isStopFound == stopBytes.count {
+                            return data
+                        }
                     }
                 }
             }
+            
             if data.count >= maxBytes {
                 return data
             }
         }
     }
-    
 }
 
 // MARK: Transmitting
