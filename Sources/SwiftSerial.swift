@@ -348,6 +348,11 @@ public class SerialPort {
         
         specialCharacters.VMIN = cc_t(minimumBytesToRead)
         specialCharacters.VTIME = cc_t(timeout)
+        
+        //if not set we reciving 0x0A where must be 0x0D value
+        settings.c_iflag &= ~UInt(INLCR)
+        settings.c_iflag &= ~UInt(ICRNL)
+        
         settings.c_cc = specialCharacters
         
         // Commit settings
@@ -446,6 +451,24 @@ extension SerialPort {
         return try readUntilChar(newlineChar)
     }
     
+    public func readChar() throws -> UnicodeScalar {
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 1)
+        
+        defer {
+            buffer.deallocate(capacity: 1)
+        }
+        
+        while true {
+            let bytesRead = try readBytes(into: buffer, size: 1)
+            
+            if bytesRead > 0 {
+                let character = UnicodeScalar(buffer[0])
+                return character
+            }
+        }
+        
+    }
+    
     public func readByte() throws -> UInt8 {
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 1)
         
@@ -460,12 +483,7 @@ extension SerialPort {
                 return buffer[0]
             }
         }
-    }
-    
-    public func readChar() throws -> UnicodeScalar {
-        let byteRead = try readByte()
-        let character = UnicodeScalar(byteRead)
-        return character
+        
     }
     
     public func readUntilBytes(stopBytes: [UInt8], maxBytes: Int) throws -> [UInt8] {
@@ -480,6 +498,7 @@ extension SerialPort {
                         isStopFound = isStopFound + 1
                     }
                     if isStopFound == stopBytes.count {
+                        
                         return data
                     }
                 }
