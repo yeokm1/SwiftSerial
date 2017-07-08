@@ -21,6 +21,7 @@ public enum BaudRate {
     case baud57600
     case baud115200
     case baud230400
+    case baud250000
     case baud460800
     case baud500000
     case baud576000
@@ -73,6 +74,8 @@ public enum BaudRate {
             return speed_t(B115200)
         case .baud230400:
             return speed_t(B230400)
+        case .baud250000:
+            return speed_t(B250000)
         case .baud460800:
             return speed_t(B460800)
         case .baud500000:
@@ -119,6 +122,7 @@ public enum BaudRate {
     case baud57600
     case baud115200
     case baud230400
+    case baud250000
 
     var speedValue: speed_t {
         switch self {
@@ -160,6 +164,8 @@ public enum BaudRate {
             return speed_t(B115200)
         case .baud230400:
             return speed_t(B230400)
+        case .baud250000:
+            return speed_t(B250000)
         }
     }
 }
