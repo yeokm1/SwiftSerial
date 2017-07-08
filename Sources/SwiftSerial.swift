@@ -75,7 +75,7 @@ public enum BaudRate {
         case .baud230400:
             return speed_t(B230400)
         case .baud250000:
-            return speed_t(B250000)
+            return speed_t(250000)
         case .baud460800:
             return speed_t(B460800)
         case .baud500000:
@@ -165,7 +165,7 @@ public enum BaudRate {
         case .baud230400:
             return speed_t(B230400)
         case .baud250000:
-            return speed_t(B250000)
+            return speed_t(250000)
         }
     }
 }
