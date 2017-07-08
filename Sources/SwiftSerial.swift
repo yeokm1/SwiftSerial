@@ -386,8 +386,8 @@ public class SerialPort {
         
         settings.c_cflag &= ~tcflag_t(0010017)    //Remove current BAUD rate CBAUD = 0010017
         settings.c_cflag |= tcflag_t(0010000)     //Allow custom BAUD rate using int input BOTHER = 0010000
-        settings.c_ispeed = customReceiveRate       //Set the input BAUD rate
-        settings.c_ospeed = customTransmitRate      //Set the output BAUD rate
+        settings.c_ispeed = speed_t(customReceiveRate)       //Set the input BAUD rate
+        settings.c_ospeed = speed_t(customTransmitRate)      //Set the output BAUD rate
         
         // Enable parity (even/odd) if needed
         settings.c_cflag |= parityType.parityValue
