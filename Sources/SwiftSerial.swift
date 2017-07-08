@@ -360,8 +360,8 @@ public class SerialPort {
     }
     
     
-    public func setSettings(customReceiveRate: UInt,
-                            customTransmitRate: UInt,
+    public func setSettings(customReceiveRate: UInt32,
+                            customTransmitRate: UInt32,
                             minimumBytesToRead: Int,
                             timeout: Int = 0, /* 0 means wait indefinitely */
         parityType: ParityType = .none,
