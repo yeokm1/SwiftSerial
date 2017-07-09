@@ -119,6 +119,7 @@ public enum BaudRate {
     case baud57600
     case baud115200
     case baud230400
+    case baud250000
 
     var speedValue: speed_t {
         switch self {
@@ -160,6 +161,8 @@ public enum BaudRate {
             return speed_t(B115200)
         case .baud230400:
             return speed_t(B230400)
+        case .baud250000:
+            return speed_t(250000)
         }
     }
 }
@@ -463,12 +466,10 @@ public class SerialPort {
         // Commit settings
         var result = tcsetattr(fileDescriptor, TCSANOW, &settings)
         
+        var baudRate = Int(customBaud)
+        result = ioctl(fileDescriptor, 0x80045402, &baudRate)
         if result != 0 {
-            var baudRate = Int(customBaud)
-            result = ioctl(fileDescriptor, 0x80045402, &baudRate)
-            if result != 0 {
-                print("set customBaud fail \(result)")
-            }
+            print("set customBaud fail \(result)")
         }
         
         
