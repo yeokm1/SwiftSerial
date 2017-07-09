@@ -360,8 +360,7 @@ public class SerialPort {
     }
     
     
-    public func setSettings(customReceiveRate: UInt32,
-                            customTransmitRate: UInt32,
+    public func setSettings(customBaud: UInt32,
                             minimumBytesToRead: Int,
                             timeout: Int = 0, /* 0 means wait indefinitely */
         parityType: ParityType = .none,
@@ -382,13 +381,6 @@ public class SerialPort {
         // Get options structure for the port
         tcgetattr(fileDescriptor, &settings)
         
-        // Set baud rates
-        
-        settings.c_cflag &= ~tcflag_t(0010017)    //Remove current BAUD rate CBAUD = 0010017
-        settings.c_cflag |= tcflag_t(0010000)     //Allow custom BAUD rate using int input BOTHER = 0010000
-        settings.c_ispeed = speed_t(customReceiveRate)       //Set the input BAUD rate
-        settings.c_ospeed = speed_t(customTransmitRate)      //Set the output BAUD rate
-        
         // Enable parity (even/odd) if needed
         settings.c_cflag |= parityType.parityValue
         
@@ -402,6 +394,13 @@ public class SerialPort {
         // Set data bits size flag
         settings.c_cflag &= ~tcflag_t(CSIZE)
         settings.c_cflag |= dataBitsSize.flagValue
+        
+        
+        // Set baud rate
+        // Set baud rates
+        cfsetispeed(&settings, speed_t(customBaud))
+        cfsetospeed(&settings, speed_t(customBaud))
+
         
         // Set hardware flow control flag
         #if os(Linux)
@@ -462,7 +461,17 @@ public class SerialPort {
         settings.c_cc = specialCharacters
         
         // Commit settings
-        tcsetattr(fileDescriptor, TCSANOW, &settings)
+        var result = tcsetattr(fileDescriptor, TCSANOW, &settings)
+        
+        if result != 0 {
+            var baudRate = Int(customBaud)
+            result = ioctl(fileDescriptor, 0x80045402, &baudRate)
+            if result != 0 {
+                print("set customBaud fail \(result)")
+            }
+        }
+        
+        
     }
 
     public func closePort() {
