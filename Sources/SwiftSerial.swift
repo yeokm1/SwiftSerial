@@ -518,12 +518,12 @@ extension SerialPort {
     public func readBytes(startByte: UInt8, stopByte: UInt8, packetLength: Int, maxBytes: Int) throws -> [UInt8] {
         
         var data: Array<UInt8> = [UInt8]()
-        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 1)
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: packetLength+packetLength+packetLength)
         defer {
             buffer.deallocate(capacity: maxBytes)
         }
         while true {
-            let bytesRead = try readBytes(into: buffer, size: 1)
+            let bytesRead = try readBytes(into: buffer, size: packetLength)
             
             if bytesRead > 0 {
                 print("read \(bytesRead)")
