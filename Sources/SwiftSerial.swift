@@ -160,6 +160,7 @@ public enum BaudRate {
             return speed_t(B115200)
         case .baud230400:
             return speed_t(B230400)
+        default: return speed_t(B9600)
         }
     }
 }
@@ -565,6 +566,30 @@ extension SerialPort {
     public func writeChar(_ character: UnicodeScalar) throws -> Int{
         let stringEquiv = String(character)
         let bytesWritten = try writeString(stringEquiv)
+        return bytesWritten
+    }
+    
+    public func writeByte(byte: UInt8) throws -> Int {
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 1)
+        
+        defer {
+            buffer.deallocate(capacity: 1)
+        }
+        buffer[0] = byte
+        let bytesWritten = write(fileDescriptor!, buffer, 1)
+        return bytesWritten
+    }
+    
+    public func writeByteArray(into bytes: [UInt8]) throws -> Int {
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bytes.count)
+        
+        defer {
+            buffer.deallocate(capacity: bytes.count)
+        }
+        for i in 0...bytes.count - 1 {
+            buffer[i] = bytes[i]
+        }
+        let bytesWritten = write(fileDescriptor!, buffer, bytes.count)
         return bytesWritten
     }
 }
