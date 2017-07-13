@@ -527,20 +527,18 @@ extension SerialPort {
             
             if bytesRead > 0 {
                 print("read \(bytesRead)")
-                
-                if buffer[0] == stopByte {
-                    data.append(buffer[0])
-                    if data.count >= packetLength {
-                        print("data.count - packetLength = \(data.count - packetLength - 1) | data.count:\(data.count)")
-                        if data[data.count - packetLength] == startByte {
-                            print("package found: \(data)")
-                            let data_result: Array<UInt8> = Array(data[(data.count - packetLength - 1) ... data.count - 1])
-                            return data_result
+                for i in 0 ... bytesRead {
+                    data.append(buffer[i])
+                    if buffer[i] == stopByte {
+                        if data.count >= packetLength {
+                            print("data.count - packetLength = \(data.count - packetLength - 1) | data.count:\(data.count)")
+                            if data[data.count - packetLength] == startByte {
+                                print("package found: \(data)")
+                                let data_result: Array<UInt8> = Array(data[(data.count - packetLength - 1) ... data.count - 1])
+                                return data_result
+                            }
                         }
                     }
-                } else {
-                    data.append(buffer[0])
-                }
             }
             if data.count >= maxBytes {
                 return data
