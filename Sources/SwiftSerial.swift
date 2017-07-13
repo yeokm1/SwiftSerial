@@ -529,16 +529,17 @@ extension SerialPort {
             let bytesRead = try readBytes(into: buffer, size: 1)
             
             if bytesRead > 0 {
+                
+                data.append(buffer[0])
+                
                 if buffer[0] == stopByte {
-                    data.append(buffer[0])
                     if data.count >= packetLength {
+                        print("data.count - packetLength - 1 = \(data.count - packetLength - 1)")
                         if data[data.count - packetLength - 1] == startByte {
                             let data_result: Array<UInt8> = Array(data[(data.count - packetLength - 1) ... data.count])
                             return data_result
                         }
                     }
-                } else {
-                    data.append(buffer[0])
                 }
             }
             if data.count >= maxBytes {
