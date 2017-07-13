@@ -206,6 +206,16 @@ func readChar() throws -> UnicodeScalar
 ```
 Read only one character. This works best if `minimumBytesToRead` has been set to `1` when opening the port. This function internally calls `readByte()`.
 
+```swift
+func readUntilBytes(stopBytes: [UInt8], maxBytes: Int) throws -> [UInt8]
+```
+Read bytes until stop bytes found or maxBytes count was recieved
+
+```swift
+func readBytes(startByte: UInt8, stopByte: UInt8, packetLength: Int, maxBytes: Int) throws -> [UInt8]
+```
+Read bytes from start to stop bytes with package length of maximum bytes read
+
 ### Writing data to the port
 
 There are several functions you can use to write data. All functions here are blocking till all the data has been written. All functions can throw `PortError.mustBeOpen`.

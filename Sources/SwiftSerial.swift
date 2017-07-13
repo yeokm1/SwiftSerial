@@ -467,6 +467,60 @@ extension SerialPort {
         let character = UnicodeScalar(buffer[0])
         return character     
     }
+    
+    public func readUntilBytes(stopBytes: [UInt8], maxBytes: Int) throws -> [UInt8] {
+        var data = [UInt8]()
+        var isStopFound = 0
+        while true {
+            isStopFound = 0
+            let byteRead = try readByte()
+            data.append(byteRead)
+            
+            if data.count >= stopBytes.count {
+                if byteRead == stopBytes[stopBytes.count - 1] {
+                    for index in (0..<stopBytes.count).reversed() {
+                        if stopBytes[stopBytes.count - index - 1 ] == data[data.count - index - 1] {
+                            isStopFound = isStopFound + 1
+                        }
+                        if isStopFound == stopBytes.count {
+                            return data
+                        }
+                    }
+                }
+            }
+            
+            if data.count >= maxBytes {
+                return data
+            }
+        }
+    }
+    
+    public func readBytes(startByte: UInt8, stopByte: UInt8, packetLength: Int, maxBytes: Int) throws -> [UInt8] {
+        var data: Array<UInt8> = [UInt8]()
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: maxBytes)
+        defer {
+            buffer.deallocate(capacity: maxBytes)
+        }
+        while true {
+            let bytesRead = try readBytes(into: buffer, size: maxBytes)
+            if bytesRead > 0 {
+                for i in 0 ... (bytesRead - 1) {
+                    data.append(buffer[i])
+                    if buffer[i] == stopByte {
+                        if data.count >= packetLength {
+                            if data[data.count - packetLength] == startByte {
+                                let data_result: Array<UInt8> = Array(data[(data.count - packetLength) ... data.count - 1])
+                                return data_result
+                            }
+                        }
+                    }
+                }
+            }
+            if data.count >= maxBytes {
+                return data
+            }
+        }
+    }
    
 }
 
