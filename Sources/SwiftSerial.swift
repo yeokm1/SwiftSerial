@@ -161,6 +161,7 @@ public enum BaudRate {
             return speed_t(B115200)
         case .baud230400:
             return speed_t(B230400)
+        default: return speed_t(B9600)
         }
     }
 }
@@ -527,7 +528,7 @@ extension SerialPort {
             
             if bytesRead > 0 {
                 print("read \(bytesRead)")
-                for i in 0 ... bytesRead {
+                for i in 0 ... bytesRead - 1 {
                     data.append(buffer[i])
                     if buffer[i] == stopByte {
                         if data.count >= packetLength {
