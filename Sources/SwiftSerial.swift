@@ -533,6 +533,7 @@ extension SerialPort {
                     if data.count >= packetLength {
                         print("data.count - packetLength = \(data.count - packetLength - 1) | data.count:\(data.count)")
                         if data[data.count - packetLength] == startByte {
+                            print("package found: \(data)")
                             let data_result: Array<UInt8> = Array(data[(data.count - packetLength - 1) ... data.count - 1])
                             return data_result
                         }
