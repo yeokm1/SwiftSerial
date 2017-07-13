@@ -349,6 +349,10 @@ public class SerialPort {
         specialCharacters.VMIN = cc_t(minimumBytesToRead)
         specialCharacters.VTIME = cc_t(timeout)
         settings.c_cc = specialCharacters
+        
+        //if not set we reciving 0x0A where must be 0x0D value
+        settings.c_iflag &= ~tcflag_t(INLCR)
+        settings.c_iflag &= ~tcflag_t(ICRNL)
 
         // Commit settings
         tcsetattr(fileDescriptor, TCSANOW, &settings)
