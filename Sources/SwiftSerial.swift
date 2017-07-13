@@ -161,8 +161,6 @@ public enum BaudRate {
             return speed_t(B115200)
         case .baud230400:
             return speed_t(B230400)
-        case .baud250000:
-            return speed_t(250000)
         }
     }
 }
@@ -533,6 +531,7 @@ extension SerialPort {
                 if buffer[0] == stopByte {
                     data.append(buffer[0])
                     if data.count >= packetLength {
+                        print("data.count - packetLength - 1 = \(data.count - packetLength - 1) data.count:\(data.count)")
                         if data[data.count - packetLength - 1] == startByte {
                             let data_result: Array<UInt8> = Array(data[(data.count - packetLength - 1) ... data.count - 1])
                             return data_result
