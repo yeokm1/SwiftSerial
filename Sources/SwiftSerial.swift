@@ -531,8 +531,8 @@ extension SerialPort {
                 if buffer[0] == stopByte {
                     data.append(buffer[0])
                     if data.count >= packetLength {
-                        print("data.count - packetLength - 1 = \(data.count - packetLength - 1) data.count:\(data.count)")
-                        if data[data.count - packetLength - 1] == startByte {
+                        print("data.count - packetLength = \(data.count - packetLength - 1) | data.count:\(data.count)")
+                        if data[data.count - packetLength] == startByte {
                             let data_result: Array<UInt8> = Array(data[(data.count - packetLength - 1) ... data.count - 1])
                             return data_result
                         }
