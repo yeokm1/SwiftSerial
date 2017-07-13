@@ -539,6 +539,7 @@ extension SerialPort {
                             }
                         }
                     }
+                }
             }
             if data.count >= maxBytes {
                 return data
