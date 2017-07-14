@@ -240,6 +240,17 @@ func writeChar(_ character: UnicodeScalar) throws -> Int{
 ```
 Writes only one character. Will return `1` if successful. This function internally calls `writeString()`. Pull requests for a better way of doing this is appreciated.
 
+```swift
+func writeByte(byte: UInt8) throws -> Int 
+```
+Writes only one Byte. Will return `1` if successful.
+
+```swift
+ func writeByteArray(into bytes: [UInt8]) throws -> Int 
+```
+Writes array of Bytes. Will return number written bytes if successful.
+
+
 ### Closing the port
 
 Just do `serialPort.closePort()` to close the port once you are done using it.
