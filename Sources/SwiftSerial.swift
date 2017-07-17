@@ -349,6 +349,10 @@ public class SerialPort {
         specialCharacters.VMIN = cc_t(minimumBytesToRead)
         specialCharacters.VTIME = cc_t(timeout)
         settings.c_cc = specialCharacters
+        
+        //if not set we reciving 0x0A where must be 0x0D value
+        settings.c_iflag &= ~tcflag_t(INLCR)
+        settings.c_iflag &= ~tcflag_t(ICRNL)
 
         // Commit settings
         tcsetattr(fileDescriptor, TCSANOW, &settings)
@@ -463,9 +467,74 @@ extension SerialPort {
     }
 
     public func readChar() throws -> UnicodeScalar {
-        let byteRead = readByte()
-        let character = UnicodeScalar(buffer[0])
-        return character     
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 1)
+        
+        defer {
+            buffer.deallocate(capacity: 1)
+        }
+        
+        while true {
+            let bytesRead = try readBytes(into: buffer, size: 1)
+            
+            if bytesRead > 0 {
+                let character = UnicodeScalar(buffer[0])
+                return character
+            }
+        }
+    }
+    
+    public func readUntilBytes(stopBytes: [UInt8], maxBytes: Int) throws -> [UInt8] {
+        var data = [UInt8]()
+        var isStopFound = 0
+        while true {
+            isStopFound = 0
+            let byteRead = try readByte()
+            data.append(byteRead)
+            
+            if data.count >= stopBytes.count {
+                if byteRead == stopBytes[stopBytes.count - 1] {
+                    for index in (0..<stopBytes.count).reversed() {
+                        if stopBytes[stopBytes.count - index - 1 ] == data[data.count - index - 1] {
+                            isStopFound = isStopFound + 1
+                        }
+                        if isStopFound == stopBytes.count {
+                            return data
+                        }
+                    }
+                }
+            }
+            
+            if data.count >= maxBytes {
+                return data
+            }
+        }
+    }
+    
+    public func readBytes(startByte: UInt8, stopByte: UInt8, packetLength: Int, maxBytes: Int) throws -> [UInt8] {
+        var data: Array<UInt8> = [UInt8]()
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: maxBytes)
+        defer {
+            buffer.deallocate(capacity: maxBytes)
+        }
+        while true {
+            let bytesRead = try readBytes(into: buffer, size: maxBytes)
+            if bytesRead > 0 {
+                for i in 0 ... (bytesRead - 1) {
+                    data.append(buffer[i])
+                    if buffer[i] == stopByte {
+                        if data.count >= packetLength {
+                            if data[data.count - packetLength] == startByte {
+                                let data_result: Array<UInt8> = Array(data[(data.count - packetLength) ... data.count - 1])
+                                return data_result
+                            }
+                        }
+                    }
+                }
+            }
+            if data.count >= maxBytes {
+                return data
+            }
+        }
     }
    
 }
@@ -507,6 +576,30 @@ extension SerialPort {
     public func writeChar(_ character: UnicodeScalar) throws -> Int{
         let stringEquiv = String(character)
         let bytesWritten = try writeString(stringEquiv)
+        return bytesWritten
+    }
+    
+    public func writeByte(byte: UInt8) throws -> Int {
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 1)
+        
+        defer {
+            buffer.deallocate(capacity: 1)
+        }
+        buffer[0] = byte
+        let bytesWritten = write(fileDescriptor!, buffer, 1)
+        return bytesWritten
+    }
+    
+    public func writeByteArray(into bytes: [UInt8]) throws -> Int {
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bytes.count)
+        
+        defer {
+            buffer.deallocate(capacity: bytes.count)
+        }
+        for i in 0...bytes.count - 1 {
+            buffer[i] = bytes[i]
+        }
+        let bytesWritten = write(fileDescriptor!, buffer, bytes.count)
         return bytesWritten
     }
 }
