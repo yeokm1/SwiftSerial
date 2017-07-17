@@ -160,7 +160,6 @@ public enum BaudRate {
             return speed_t(B115200)
         case .baud230400:
             return speed_t(B230400)
-        default: return speed_t(B9600)
         }
     }
 }
