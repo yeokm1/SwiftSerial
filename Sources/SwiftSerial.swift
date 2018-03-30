@@ -463,9 +463,9 @@ extension SerialPort {
     }
 
     public func readChar() throws -> UnicodeScalar {
-        let byteRead = readByte()
-        let character = UnicodeScalar(buffer[0])
-        return character     
+        let byteRead = try readByte()
+        let character = UnicodeScalar(byteRead)
+        return character
     }
    
 }
