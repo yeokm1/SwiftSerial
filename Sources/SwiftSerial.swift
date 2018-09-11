@@ -209,6 +209,7 @@ public enum PortError: Int32, Error {
     case mustReceiveOrTransmit
     case mustBeOpen
     case stringsMustBeUTF8
+    case unableToConvertByteToCharacter
 }
 
 public class SerialPort {
@@ -424,6 +425,9 @@ extension SerialPort {
             let bytesRead = try readBytes(into: buffer, size: 1)
 
             if bytesRead > 0 {
+                if ( buffer[0] > 127) {
+                    throw PortError.unableToConvertByteToCharacter
+                }
                 let character = CChar(buffer[0])
                 
                 if character == terminator {
