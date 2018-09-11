@@ -210,6 +210,7 @@ public enum PortError: Int32, Error {
     case mustBeOpen
     case stringsMustBeUTF8
     case unableToConvertByteToCharacter
+    case deviceNotConnected
 }
 
 public class SerialPort {
@@ -371,7 +372,13 @@ extension SerialPort {
         guard let fileDescriptor = fileDescriptor else {
             throw PortError.mustBeOpen
         }
-
+        
+        var s: stat = stat()
+        fstat(fileDescriptor, &s)
+        if s.st_nlink != 1 {
+            throw PortError.deviceNotConnected
+        }
+        
         let bytesRead = read(fileDescriptor, buffer, size)
         return bytesRead
     }
