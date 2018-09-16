@@ -209,6 +209,8 @@ public enum PortError: Int32, Error {
     case mustReceiveOrTransmit
     case mustBeOpen
     case stringsMustBeUTF8
+    case unableToConvertByteToCharacter
+    case deviceNotConnected
 }
 
 public class SerialPort {
@@ -370,7 +372,13 @@ extension SerialPort {
         guard let fileDescriptor = fileDescriptor else {
             throw PortError.mustBeOpen
         }
-
+        
+        var s: stat = stat()
+        fstat(fileDescriptor, &s)
+        if s.st_nlink != 1 {
+            throw PortError.deviceNotConnected
+        }
+        
         let bytesRead = read(fileDescriptor, buffer, size)
         return bytesRead
     }
@@ -424,6 +432,9 @@ extension SerialPort {
             let bytesRead = try readBytes(into: buffer, size: 1)
 
             if bytesRead > 0 {
+                if ( buffer[0] > 127) {
+                    throw PortError.unableToConvertByteToCharacter
+                }
                 let character = CChar(buffer[0])
                 
                 if character == terminator {
