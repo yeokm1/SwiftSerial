@@ -269,7 +269,7 @@ public class SerialPort {
                             useHardwareFlowControl: Bool = false,
                             useSoftwareFlowControl: Bool = false,
                             processOutput: Bool = false) {
-        
+
         guard let fileDescriptor = fileDescriptor else {
             return
         }
@@ -372,13 +372,13 @@ extension SerialPort {
         guard let fileDescriptor = fileDescriptor else {
             throw PortError.mustBeOpen
         }
-        
+
         var s: stat = stat()
         fstat(fileDescriptor, &s)
         if s.st_nlink != 1 {
             throw PortError.deviceNotConnected
         }
-        
+
         let bytesRead = read(fileDescriptor, buffer, size)
         return bytesRead
     }
@@ -386,7 +386,7 @@ extension SerialPort {
     public func readData(ofLength length: Int) throws -> Data {
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: length)
         defer {
-            buffer.deallocate(capacity: length)
+            buffer.deallocate()
         }
 
         let bytesRead = try readBytes(into: buffer, size: length)
@@ -425,7 +425,7 @@ extension SerialPort {
         var data = Data()
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 1)
         defer {
-            buffer.deallocate(capacity: 1)
+            buffer.deallocate()
         }
 
         while true {
@@ -436,7 +436,7 @@ extension SerialPort {
                     throw PortError.unableToConvertByteToCharacter
                 }
                 let character = CChar(buffer[0])
-                
+
                 if character == terminator {
                     break
                 } else {
@@ -459,14 +459,14 @@ extension SerialPort {
 
     public func readByte() throws -> UInt8 {
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: 1)
-        
+
         defer {
-            buffer.deallocate(capacity: 1)
+            buffer.deallocate()
         }
-        
+
         while true {
             let bytesRead = try readBytes(into: buffer, size: 1)
-            
+
             if bytesRead > 0 {
                 return buffer[0]
             }
@@ -478,7 +478,7 @@ extension SerialPort {
         let character = UnicodeScalar(byteRead)
         return character
     }
-   
+
 }
 
 // MARK: Transmitting
@@ -498,7 +498,7 @@ extension SerialPort {
         let size = data.count
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: size)
         defer {
-            buffer.deallocate(capacity: size)
+            buffer.deallocate()
         }
 
         data.copyBytes(to: buffer, count: size)
