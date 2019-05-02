@@ -21,6 +21,11 @@ I gave a talk on this library and one of its examples SwiftSerialIM. Click on th
 
 You should have Xcode 8 installed with the command line tools.
 
+To develop app with XCode, enable the App Sandbox capability in Xcode, and under Hardware, select USB. (Mac Apps are sandboxed and you need the USB entitlement.)
+<img src="https://user-images.githubusercontent.com/5688874/55690960-6ff8fb00-5998-11e9-9df6-7e3ebe50e19a.png" alt="Swift 3.0">
+
+
+
 ## Linux System Preparation
 
 Before using this library, I assume you already have Ubuntu installed and fully updated on your system or single-board computer. To get Ubuntu installed on the Raspberry Pi, use this [link](https://wiki.ubuntu.com/ARM/RaspberryPi).
