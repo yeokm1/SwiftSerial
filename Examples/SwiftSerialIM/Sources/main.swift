@@ -113,7 +113,7 @@ do {
 
 
     while true {
-        var enteredKey = getKeyPress()
+        let enteredKey = getKeyPress()
         printToScreenFrom(myself: true, characterToPrint: enteredKey)
         var _ = try serialPort.writeChar(enteredKey)
     }

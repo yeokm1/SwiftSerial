@@ -32,9 +32,9 @@ do {
                            transmitRate: .baud9600,
                            minimumBytesToRead: 1)
 
-    print("Writing test string <\(testString)> of \(testString.characters.count) characters to serial port")
+    print("Writing test string <\(testString)> of \(testString.count) characters to serial port")
 
-    var bytesWritten = try serialPort.writeString(testString)
+    let bytesWritten = try serialPort.writeString(testString)
 
     print("Successfully wrote \(bytesWritten) bytes")
     print("Waiting to receive what was written...")
@@ -54,7 +54,7 @@ do {
     var multiLineString: String = ""
 
 
-    for i in 1...numberOfMultiNewLineTest { 
+    for _ in 1...numberOfMultiNewLineTest { 
         multiLineString += testString + "\n"
     }
 
