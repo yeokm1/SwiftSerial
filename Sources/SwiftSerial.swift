@@ -299,6 +299,9 @@ public class SerialPort {
         settings.c_cflag &= ~tcflag_t(CSIZE)
         settings.c_cflag |= dataBitsSize.flagValue
 
+        //Disable input mapping of CR to NL, mapping of NL into CR, and ignoring CR
+        settings.c_iflag &= ~tcflag_t(ICRNL | INLCR | IGNCR)
+
         // Set hardware flow control flag
     #if os(Linux)
         if useHardwareFlowControl {
