@@ -3,12 +3,6 @@ A Swift Linux and Mac library for reading and writing to serial ports. This libr
 
 This library is an improvement over my previous now deprecated library [SwiftLinuxSerial](https://github.com/yeokm1/SwiftLinuxSerial) which was less Swifty and supported only Linux. This library is thanks largely to [Jay Jun](https://github.com/jayjun). His original pull request can be found [here](https://github.com/yeokm1/SwiftLinuxSerial/pull/1).
 
-<p>
-![macOS](https://img.shields.io/badge/os-macOS-green.svg?style=flat)
-<img src="https://img.shields.io/badge/OS-Ubuntu-blue.svg?style=flat" alt="Swift 3.0">
-<a href="https://developer.apple.com/swift"><img src="https://img.shields.io/badge/swift3-compatible-orange.svg?style=flat" alt="Swift 3 compatible" /></a>
-<a href="https://raw.githubusercontent.com/uraimo/SwiftyGPIO/master/LICENSE"><img src="http://img.shields.io/badge/license-MIT-blue.svg?style=flat" alt="License: MIT" /></a>
-
 ## Talk on this library
 
 I gave a talk on this library and one of its examples SwiftSerialIM. Click on the links below to see the slides and video.
@@ -24,53 +18,10 @@ You should have Xcode 8 installed with the command line tools.
 To develop app with XCode, enable the App Sandbox capability in Xcode, and under Hardware, select USB. (Mac Apps are sandboxed and you need the USB entitlement.)
 <img src="https://user-images.githubusercontent.com/5688874/55690960-6ff8fb00-5998-11e9-9df6-7e3ebe50e19a.png" alt="Swift 3.0">
 
-
-
 ## Linux System Preparation
 
-Before using this library, I assume you already have Ubuntu installed and fully updated on your system or single-board computer. To get Ubuntu installed on the Raspberry Pi, use this [link](https://wiki.ubuntu.com/ARM/RaspberryPi).
+Varies depending on system...
 
-### Install Swift 3 on Ubuntu on x86-based machines
-
-Reference instructions obtained from [here](http://dev.iachieved.it/iachievedit/swift-3-0-for-ubuntu-16-04-xenial-xerus/). We will use a Swift binary produced by iachievedit.
-```bash
-#Add the repository key for iachievedit
-wget -qO- http://dev.iachieved.it/iachievedit.gpg.key | sudo apt-key add -
-
-#Add the Xenial repository to sources.list
-echo "deb http://iachievedit-repos.s3.amazonaws.com/ xenial main" | sudo tee --append /etc/apt/sources.list
-
-sudo apt-get update
-sudo apt-get install swift-3.0
-
-nano ~/.profile
-#This command can be added to your bash profile so Swift will be in your PATH after a reboot
-export PATH=/opt/swift/swift-3.0/usr/bin:$PATH
-```
-
-### Install Swift 3 on Ubuntu on Raspberry Pi 3
-Instructions from this section is referenced from this [link](http://dev.iachieved.it/iachievedit/swift-3-0-on-raspberry-pi-2-and-3/).
-
-Since Swift 3 is still rapidly evolving, we should not use the Swift packages provided via the apt package manager if they exist and instead use prebuilt binaries instead. We will also not install Swift 3 to the system-level directories to avoid problems in case we have to update the version.
-
-Go to this [page](http://swift-arm.ddns.net/job/Swift-3.0-Pi3-ARM-Incremental/lastSuccessfulBuild/artifact/) and find what it is the link to the latest Swift compiled `tar.gz` package.
-
-```bash
-#Install dependencies
-sudo apt-get install libcurl4-openssl-dev libicu-dev clang-3.6
-sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-3.6 100
-sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-3.6 100
-
-cd ~
-#Replace the link below with the latest version
-wget http://swift-arm.ddns.net/job/Swift-3.0-Pi3-ARM-Incremental/lastSuccessfulBuild/artifact/swift-3.0-2016-10-13-RPi23-ubuntu16.04.tar.gz
-mkdir swift-3.0
-cd swift-3.0 && tar -xzf ../swift-3.0-2016-10-13-RPi23-ubuntu16.04.tar.gz
-
-#This command can be added to your bash profile so Swift will be in your PATH after a reboot
-nano ~/.profile
-export PATH=$HOME/swift-3.0/usr/bin:$PATH
-```
 ## Jumping straight into sample code
 To get started quickly, you can take a look at my example projects [here](Examples/).
 
@@ -92,7 +43,25 @@ sudo ./.build/debug/SwiftSerialExample /dev/ttyUSB0
 #If all goes well you should see a series of messages informing you that data transmitted has been received properly.
 ```
 
-### Example 2: A chat app between 2 machines
+### Example 2: Binary Loopback Test
+
+Variant of example 1 but testing the transfer of binary data specifically ensuring the`0x0D` bit is not converted to another character.
+
+```bash
+git clone https://github.com/yeokm1/SwiftSerial.git
+cd SwiftSerial/Examples/SwiftSerialBinary/
+swift build
+
+#For Linux: You need root to access the serial port. Replace /dev/ttyUSB0 with the name of your serial port under test
+sudo ./.build/debug/SwiftSerialBinary /dev/ttyUSB0
+
+#For Mac: Root is not required
+./.build/debug/SwiftSerialBinary /dev/cu.usbserial
+
+#If all goes well you should see a series of messages informing you that data transmitted has been received properly.
+```
+
+### Example 3: A chat app between 2 machines
 
 In order to run this example properly, you need 2 machines connected by a [null-modem cable](https://en.wikipedia.org/wiki/Null_modem) or 2 USB-Serial adapters with the TX-RX pins connected to each other. Run a copy of my program on both machines.
 
@@ -117,7 +86,7 @@ Add SwiftSerial as a dependency to your project by editing the `Package.swift` f
 let package = Package(
     name: "NameOfMyProject",
     dependencies: [
-        .package(url: "https://github.com/yeokm1/SwiftSerial.git", from: "0.1.1"),
+        .package(url: "https://github.com/yeokm1/SwiftSerial.git", from: "0.1.2"),
         ...
     ]
     ...
