@@ -1,5 +1,5 @@
 # SwiftSerial
-A Swift Linux and Mac library for reading and writing to serial ports. This library has been tested to work on macOS Mojove, Linux Mint 18 (based on Ubuntu 16.04) and on the [Raspberry Pi 3 on Ubuntu 16.04](https://wiki.ubuntu.com/ARM/RaspberryPi) and Raspberry Pi 4 on Raspian Buster. Other platforms using Ubuntu like the Beaglebone might work as well.
+A Swift Linux and Mac library for reading and writing to serial ports. This library has been tested to work on macOS Mojave, Linux Mint 18 (based on Ubuntu 16.04) and on the [Raspberry Pi 3 on Ubuntu 16.04](https://wiki.ubuntu.com/ARM/RaspberryPi) and Raspberry Pi 4 on Raspian Buster. Other platforms using Ubuntu like the Beaglebone might work as well.
 
 This library is an improvement over my previous now deprecated library [SwiftLinuxSerial](https://github.com/yeokm1/SwiftLinuxSerial) which was less Swifty and supported only Linux. This library is thanks largely to [Jay Jun](https://github.com/jayjun). His original pull request can be found [here](https://github.com/yeokm1/SwiftLinuxSerial/pull/1).
 
@@ -13,10 +13,14 @@ I gave a talk on this library and one of its examples SwiftSerialIM. Click on th
 
 ## Mac OS Preparation
 
-You should have Xcode 8 installed with the command line tools.
+You should have Xcode 8 or above installed with the command line tools.
+
+You may need to enable USB and/or serial entitlement.
 
 To develop app with XCode, enable the App Sandbox capability in Xcode, and under Hardware, select USB. (Mac Apps are sandboxed and you need the USB entitlement.)
 <img src="https://user-images.githubusercontent.com/5688874/55690960-6ff8fb00-5998-11e9-9df6-7e3ebe50e19a.png" alt="Swift 3.0">
+
+For Serial entitlement, there is no checkbox for it. So `com.apple.security.device.serial` needs to be manually added to the "YourApp.entitlements" file in the Xcode project. Thanks to [this issue](https://github.com/yeokm1/SwiftSerial/issues/18) raised by @doHernandezM.
 
 ## Linux System Preparation
 
