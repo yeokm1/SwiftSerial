@@ -222,6 +222,7 @@ public class SerialPort {
             }
         }
         pollSource.resume()
+        self.pollSource = pollSource
         self.readDataStream = stream
     }
 
