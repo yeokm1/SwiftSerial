@@ -155,6 +155,11 @@ public class SerialPort {
     var path: String
     var fileDescriptor: Int32?
 
+    private var pollSource: DispatchSourceRead?
+    private var readDataStream: AsyncStream<Data>?
+    private var readBytesStream: AsyncStream<UInt8>?
+    private var readLinesStream: AsyncStream<String>?
+
     public init(path: String) {
         self.path = path
     }
@@ -194,6 +199,29 @@ public class SerialPort {
         if fileDescriptor == PortError.failedToOpen.rawValue {
             throw PortError.failedToOpen
         }
+
+        guard
+            receive,
+            let fileDescriptor
+        else { return }
+        let pollSource = DispatchSource.makeReadSource(fileDescriptor: fileDescriptor, queue: .global(qos: .default))
+        let stream = AsyncStream<Data> { continuation in
+            pollSource.setEventHandler {
+
+                let bufferSize = 1024
+                let buffer = UnsafeMutableRawPointer
+                    .allocate(byteCount: bufferSize, alignment: 8)
+                let bytesRead = read(fileDescriptor, buffer, bufferSize)
+                guard bytesRead > 0 else { return }
+                let bytes = Data(bytes: buffer, count: bytesRead)
+                continuation.yield(bytes)
+            }
+
+            pollSource.setCancelHandler {
+                continuation.finish()
+            }
+        }
+        self.readDataStream = stream
     }
 
     public func setSettings(receiveRate: BaudRate,
@@ -297,6 +325,13 @@ public class SerialPort {
     }
 
     public func closePort() {
+        pollSource?.cancel()
+        pollSource = nil
+
+        readDataStream = nil
+        readBytesStream = nil
+        readLinesStream = nil
+
         if let fileDescriptor = fileDescriptor {
             close(fileDescriptor)
         }
@@ -419,6 +454,80 @@ extension SerialPort {
         return character
     }
 
+    public func asyncData() throws -> AsyncStream<Data> {
+        guard
+            fileDescriptor != nil,
+            let readDataStream
+        else {
+            throw PortError.mustBeOpen
+        }
+
+        return readDataStream
+    }
+
+    public func asyncBytes() throws -> AsyncStream<UInt8> {
+        guard
+            fileDescriptor != nil,
+            let readDataStream
+        else {
+            throw PortError.mustBeOpen
+        }
+
+        if let existing = readBytesStream {
+            return existing
+        } else {
+            let new = AsyncStream<UInt8> { continuation in
+                Task {
+                    for try await data in readDataStream {
+                        for byte in data {
+                            continuation.yield(byte)
+                        }
+                    }
+                    continuation.finish()
+                }
+            }
+            readBytesStream = new
+            return new
+        }
+    }
+
+    public func asyncLines() throws -> AsyncStream<String> {
+        guard
+            fileDescriptor != nil
+        else {
+            throw PortError.mustBeOpen
+        }
+
+        if let existing = readLinesStream {
+            return existing
+        } else {
+            let byteStream = try asyncBytes()
+            let new = AsyncStream<String> { continuation in
+                Task {
+                    var accumulator = Data()
+                    for try await byte in byteStream {
+                        accumulator.append(byte)
+
+                        guard
+                            UnicodeScalar(byte) == "\n".unicodeScalars.first
+                        else { continue }
+
+                        defer { accumulator = Data() }
+                        guard
+                            let string = String(data: accumulator, encoding: .utf8)
+                        else { 
+                            continuation.yield("Error: Non string data. Perhaps you wanted data or bytes output?")
+                            continue
+                        }
+                        continuation.yield(string)
+                    }
+                    continuation.finish()
+                }
+            }
+            readLinesStream = new
+            return new
+        }
+    }
 }
 
 // MARK: Transmitting
