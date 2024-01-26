@@ -1,4 +1,7 @@
 # SwiftSerial
+
+(This repository is now archived as I'm no longer maintaining this.)
+
 A Swift Linux and Mac library for reading and writing to serial ports. This library has been tested to work on macOS Mojave, Linux Mint 18 (based on Ubuntu 16.04) and on the [Raspberry Pi 3 on Ubuntu 16.04](https://wiki.ubuntu.com/ARM/RaspberryPi) and Raspberry Pi 4 on Raspian Buster. Other platforms using Ubuntu like the Beaglebone might work as well.
 
 This library is an improvement over my previous now deprecated library [SwiftLinuxSerial](https://github.com/yeokm1/SwiftLinuxSerial) which was less Swifty and supported only Linux. This library is thanks largely to [Jay Jun](https://github.com/jayjun). His original pull request can be found [here](https://github.com/yeokm1/SwiftLinuxSerial/pull/1).
